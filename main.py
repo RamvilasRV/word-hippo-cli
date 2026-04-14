@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 
-from parsers import synonyms_antonyms_parser, parser_v2
+from parsers import synonyms_antonyms_parser_v2
 
 
 SYNONYMS_URL = "https://www.wordhippo.com/what-is/another-word-for/"
@@ -13,12 +13,12 @@ TRANSLATIONS_URL= "https://www.wordhippo.com/what-is/process-form.html"
 def get_synonyms(word):
     url = SYNONYMS_URL + f"{word}.html"
     response = requests.get(url)
-    synonyms_antonyms_parser(response)
+    synonyms_antonyms_parser_v2(response)
 
 def get_antonyms(word):
     url = ANTONYMS_URL + f"{word}.html"
     response = requests.get(url)
-    parser_v2(response)
+    synonyms_antonyms_parser_v2(response)
 
 def get_definition():
     pass
@@ -39,6 +39,5 @@ def translate_from_english():
     pass
     
 
-# translate_to_english(from_lang="bengali", sentence="Dhonnobad")
-get_antonyms(word="Juxtaposition")
+get_synonyms(word="Opposite")
 

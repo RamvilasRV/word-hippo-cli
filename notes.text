@@ -33,3 +33,22 @@ for div1 in soup.find_all("div", class_="class1"):
     div2 = div1.find_next_sibling("div", class_="class2")
     if div2:
         pairs.append((div1.text.strip(), div2.text.strip()))
+
+For parsing the inner table, do the following
+There is class "thesaurusContentLinkContextEntry" and the class within that class "thesaurusContentLink".
+- The number of these classes should tell us the number of definitions present. That should also help us in numbering the final JSON, or maybe even validate it. Example below
+<div class="thesaurusContentLinkContextEntry" id="contentLinkEntry1"><a class="thesaurusContentLink" href="#C0-1">Opposite of the fact of two things being seen or placed close together (with contrasting effect)</a>
+
+class="wordtype" for the type of the word.
+class="tabdesc" for the description of the word.
+class="relatedwords" for the related words.
+    - Each word is in the class="wb" 
+
+I guess JSON might look like this
+{1:
+    {
+        wordtype:"Noun"
+        desc: "some desc"
+        reatedwords : ["list", "of", "words"]
+    }
+}

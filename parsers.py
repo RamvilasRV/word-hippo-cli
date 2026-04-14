@@ -1,44 +1,36 @@
 from bs4 import BeautifulSoup
 
-
-def synonyms_antonyms_parser(response):
+def synonyms_antonyms_parser_v2(response):
     """
-    Parses the HTML that is returned by the website.
-    This works both for the antonyms and synonyms
+    Parses the HTML returned by the website.
+    This should work for both antonyms and synonyms
+
+    I believe this could be done better with a fields list (wordtype, tabdesc... and so on)
+    and then using another list/dictionary inside the loop to check if we came across one of these fields and thus detect the boundary
     """
-    result = []
-    soup = BeautifulSoup(response.text, 'html.parser')
-    word_type_divs = soup.find_all("div", class_="wordtype")
-
-    # for i in word_type_divs:
-    #         print(i.text)
-    #         print("++++++++")
-    
-    for word_type_div in word_type_divs:
-        temp_result = {}
-        tabdesc_div = word_type_div.find_next_sibling("div", class_="tabdesc")
-        if tabdesc_div:
-            relatedwords_div = tabdesc_div.find_next_sibling("div", class_="relatedwords")
-            # related_words = relatedwords_div.find_all("div", class_="wb")
-            related_words_list = [related_word.get_text(strip=True) for related_word in relatedwords_div.find_all("div", class_="wb")]
-            if relatedwords_div:
-                tabexample_div = relatedwords_div.find_next_sibling("div", class_="tabexample")
-
-        temp_result.update({
-            "word_type":word_type_div.text, 
-            "tabdesc": tabdesc_div.text if tabdesc_div else "", 
-            "related_words":related_words_list, 
-            "table_example": tabexample_div.get_text() if tabexample_div else ""})
-        
-        result.append(temp_result)
-
-    print(result[0])
-
-
-def parser_v2(response):
     result = []
     soup = BeautifulSoup(response.text, 'html.parser')
     outer_table = soup.find("table", {"id":"contenttable"})
     inner_table = outer_table.find("table")
 
-    print(inner_table)
+    current_word={}
+    to_find = {"wordtype":0, "tabdesc":0, "relatedwords":0, "tabexample":0}
+    elements = inner_table.find_all()
+    for element in elements:
+        element_class = (element.attrs.get("class"))
+        if (element_class) and ((element_class[0] in to_find)):
+            if (to_find[element_class[0]]==0):
+                current_word[element_class[0]] = element.text
+                to_find[element_class[0]] += 1
+            elif (to_find[element_class[0]]>0):
+                if len(current_word)>0:
+                    result.append(current_word)
+                    current_word={}
+                    current_word[element_class[0]]=element.text
+                to_find = {"wordtype":0, "tabdesc":0, "relatedwords":0, "tabexample":0}
+                to_find[element_class[0]]=1
+
+    if current_word:
+        result.append(current_word)
+
+    print(result)
