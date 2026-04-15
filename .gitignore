@@ -1,4 +1,6 @@
 test*
-.text
-.txt
+*.text
+*.txt
 .dirinfo
+todo
+
