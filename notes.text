@@ -1,54 +1,10 @@
-# SIMILAR WORDS.
-class="wordtype"
-I guess this refers to the wordtype like Noun or verb for each definition.
-
-Under this div, there is another div with the class class="tabdesc", which gives us the definition.
+Parsing done for the antonyms and synonyms
 
 
-## The pattern
-I can see the pattern that goes as below:
-class="wordtype" -> has the type of the wordtype
-    class="tabdesc" -> has the description for that type of the word.
-class="relatedwords" -> has a set of words that are similar to the word we sent
-    class="wb" -> each `relatedwords` has multiple div with the `wb` class that contains the words.
-class="tabexample" -> has an example of the original word in the sentence.
-
-
-
-# TRANSLATION
-The words that are passed are getting converted into a 40 character string and i am not able to figure out the algo.
-Instead what you could do is... use the below base url
-https://www.wordhippo.com/what-is/process-form.html
-and pass the below parameter for the term "how are you doing" to translate from english to hindi
-type=from_en&lang=hindi&word=How+are+you+doing&action=translate&tk=&utk=Y
-
-
-
-Kemon achhen
-
-https://www.wordhippo.com/what-is/process-form.html?type=to_en&lang=bengali&word=Dhonnobad&action=translate
-
-
-for div1 in soup.find_all("div", class_="class1"):
-    div2 = div1.find_next_sibling("div", class_="class2")
-    if div2:
-        pairs.append((div1.text.strip(), div2.text.strip()))
-
-For parsing the inner table, do the following
-There is class "thesaurusContentLinkContextEntry" and the class within that class "thesaurusContentLink".
-- The number of these classes should tell us the number of definitions present. That should also help us in numbering the final JSON, or maybe even validate it. Example below
-<div class="thesaurusContentLinkContextEntry" id="contentLinkEntry1"><a class="thesaurusContentLink" href="#C0-1">Opposite of the fact of two things being seen or placed close together (with contrasting effect)</a>
-
-class="wordtype" for the type of the word.
-class="tabdesc" for the description of the word.
-class="relatedwords" for the related words.
-    - Each word is in the class="wb" 
-
-I guess JSON might look like this
-{1:
-    {
-        wordtype:"Noun"
-        desc: "some desc"
-        reatedwords : ["list", "of", "words"]
-    }
-}
+Request
+  |
+Parse
+  |
+clean
+  |
+return
